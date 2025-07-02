@@ -6,6 +6,7 @@
 #ケンドールの順位相関係数は、基本的に「(協和ペアの数 - 不協和ペアの数) / (総ペア数)」で計算されます
 
 from scipy import stats  #同順位（タイ）がある場合も考慮して自動でけいさんが行えるライブラリ
+from itertools import combinations #データのすべてのペアを効率的に生成。各ペアについて、協和か不協和かを判断し、それぞれのカウンターを増やす
 import numpy as np
 
 def calculate_kendall_tau_manual(x, y):
@@ -27,6 +28,11 @@ def calculate_kendall_tau_manual(x, y):
     concordant_pairs = 0  # 協和ペア（順位が同じ方向）
     discordant_pairs = 0 # 不協和ペア（順位が逆の方向）
 
+    """ combinationsの説明
+    combinations( [0, 1, 2, 3, 4], 2) を実行すると、以下のようなペアが順番に生成されます。
+    (0, 1)(0, 2)(0, 3)(0, 4)(1, 2)(1, 3)(1, 4)(2, 3)(2, 4)(3, 4)
+    (1, 0) のような逆の組み合わせや、(0, 0) のような同じもの同士の組み合わせは含まれない
+    """
     # 全てのペア (i, j) where i < j についてループ
     for i, j in combinations(range(n), 2):
         # (x[i] - x[j]) と (y[i] - y[j]) の符号を比較
